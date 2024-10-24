@@ -1,0 +1,439 @@
+{
+	"jobConfig": {
+		"name": "de-on-youtube-cleansed-csv-parquet",
+		"description": "",
+		"role": "arn:aws:iam::058264284225:role/de-on-youtube-glue-s3-role",
+		"command": "glueetl",
+		"version": "4.0",
+		"runtime": null,
+		"workerType": "G.1X",
+		"numberOfWorkers": 10,
+		"maxCapacity": 10,
+		"jobRunQueuingEnabled": null,
+		"maxRetries": 0,
+		"timeout": 2880,
+		"maxConcurrentRuns": 1,
+		"security": "none",
+		"scriptName": "de-on-youtube-cleansed-csv-parquet.py",
+		"scriptLocation": "s3://aws-glue-assets-058264284225-us-east-1/scripts/",
+		"language": "python-3",
+		"spark": false,
+		"sparkConfiguration": "standard",
+		"jobParameters": [],
+		"tags": [],
+		"jobMode": "DEVELOPER_MODE",
+		"createdOn": "2024-07-25T01:15:21.419Z",
+		"developerMode": true,
+		"connectionsList": [],
+		"temporaryDirectory": "s3://aws-glue-assets-058264284225-us-east-1/temporary/",
+		"logging": true,
+		"glueHiveMetastore": true,
+		"etlAutoTuning": false,
+		"metrics": true,
+		"observabilityMetrics": true,
+		"bookmark": "job-bookmark-disable",
+		"sparkPath": "s3://aws-glue-assets-058264284225-us-east-1/sparkHistoryLogs/",
+		"flexExecution": false,
+		"minFlexWorkers": null,
+		"maintenanceWindow": null
+	},
+	"dag": {
+		"node-1721870249779": {
+			"nodeId": "node-1721870249779",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1721870246024"
+			],
+			"name": "Amazon S3",
+			"generatedNodeName": "AmazonS3_node1721870249779",
+			"classification": "DataSink",
+			"type": "S3",
+			"streamingBatchInterval": 100,
+			"format": "glueparquet",
+			"compression": "snappy",
+			"path": "s3://de-on-youtube-cleansed-useast1-devnikita/youtube/raw_statistics/",
+			"partitionKeys": [],
+			"schemaChangePolicy": {
+				"enableUpdateCatalog": false,
+				"updateBehavior": null,
+				"database": null,
+				"table": null
+			},
+			"updateCatalogOptions": "none",
+			"autoDataQuality": {
+				"isEnabled": false,
+				"evaluationContext": null
+			},
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1721870142674": {
+			"nodeId": "node-1721870142674",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [],
+			"name": "Amazon S3",
+			"generatedNodeName": "AmazonS3_node1721870142674",
+			"classification": "DataSource",
+			"type": "S3",
+			"isCatalog": false,
+			"format": "csv",
+			"paths": [
+				"s3://de-on-youtube-raw-useast1-devnikita/youtube/raw_statistics/"
+			],
+			"compressionType": null,
+			"exclusions": [],
+			"groupFiles": null,
+			"groupSize": null,
+			"recurse": true,
+			"maxBand": null,
+			"maxFilesInBand": null,
+			"additionalOptions": {
+				"boundedSize": null,
+				"boundedFiles": null,
+				"enableSamplePath": false,
+				"samplePath": "s3://de-on-youtube-raw-useast1-devnikita/youtube/raw_statistics/region=ca/CAvideos.csv",
+				"boundedOption": null
+			},
+			"separator": ",",
+			"escaper": "",
+			"quoteChar": "\"",
+			"multiline": null,
+			"withHeader": true,
+			"writeHeader": null,
+			"skipFirst": null,
+			"optimizePerformance": false,
+			"outputSchemas": [
+				[
+					{
+						"key": "video_id",
+						"fullPath": [
+							"video_id"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "trending_date",
+						"fullPath": [
+							"trending_date"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "title",
+						"fullPath": [
+							"title"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "channel_title",
+						"fullPath": [
+							"channel_title"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "category_id",
+						"fullPath": [
+							"category_id"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "publish_time",
+						"fullPath": [
+							"publish_time"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "tags",
+						"fullPath": [
+							"tags"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "views",
+						"fullPath": [
+							"views"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "likes",
+						"fullPath": [
+							"likes"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "dislikes",
+						"fullPath": [
+							"dislikes"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "comment_count",
+						"fullPath": [
+							"comment_count"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "thumbnail_link",
+						"fullPath": [
+							"thumbnail_link"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "comments_disabled",
+						"fullPath": [
+							"comments_disabled"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "ratings_disabled",
+						"fullPath": [
+							"ratings_disabled"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "video_error_or_removed",
+						"fullPath": [
+							"video_error_or_removed"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "description",
+						"fullPath": [
+							"description"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					}
+				]
+			],
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1721870246024": {
+			"nodeId": "node-1721870246024",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1721870142674"
+			],
+			"name": "Change Schema",
+			"generatedNodeName": "ChangeSchema_node1721870246024",
+			"classification": "Transform",
+			"type": "ApplyMapping",
+			"mapping": [
+				{
+					"toKey": "video_id",
+					"fromPath": [
+						"video_id"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "trending_date",
+					"fromPath": [
+						"trending_date"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "title",
+					"fromPath": [
+						"title"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "channel_title",
+					"fromPath": [
+						"channel_title"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "category_id",
+					"fromPath": [
+						"category_id"
+					],
+					"toType": "bigint",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "publish_time",
+					"fromPath": [
+						"publish_time"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "tags",
+					"fromPath": [
+						"tags"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "views",
+					"fromPath": [
+						"views"
+					],
+					"toType": "bigint",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "likes",
+					"fromPath": [
+						"likes"
+					],
+					"toType": "bigint",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "dislikes",
+					"fromPath": [
+						"dislikes"
+					],
+					"toType": "bigint",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "comment_count",
+					"fromPath": [
+						"comment_count"
+					],
+					"toType": "bigint",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "thumbnail_link",
+					"fromPath": [
+						"thumbnail_link"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "comments_disabled",
+					"fromPath": [
+						"comments_disabled"
+					],
+					"toType": "boolean",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "ratings_disabled",
+					"fromPath": [
+						"ratings_disabled"
+					],
+					"toType": "boolean",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "video_error_or_removed",
+					"fromPath": [
+						"video_error_or_removed"
+					],
+					"toType": "boolean",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "description",
+					"fromPath": [
+						"description"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				}
+			],
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		}
+	},
+	"hasBeenSaved": false,
+	"usageProfileName": null,
+	"script": "import sys\nfrom awsglue.transforms import *\nfrom awsglue.utils import getResolvedOptions\nfrom pyspark.context import SparkContext\nfrom awsglue.context import GlueContext\nfrom awsglue.job import Job\n\n\nfrom awsglue.dynamicframe import DynamicFrame\n\n\nargs = getResolvedOptions(sys.argv, ['JOB_NAME'])\nsc = SparkContext()\nglueContext = GlueContext(sc)\nspark = glueContext.spark_session\njob = Job(glueContext)\njob.init(args['JOB_NAME'], args)\n\n# Script generated for node Amazon S3\n#AmazonS3_node1721870142674 = glueContext.create_dynamic_frame.from_options(format_options={\"quoteChar\": \"\\\"\", \"withHeader\": True, \"separator\": \",\", \"optimizePerformance\": False}, connection_type=\"s3\", format=\"csv\", connection_options={\"paths\": [\"s3://de-on-youtube-raw-useast1-devnikita/youtube/raw_statistics/\"], \"recurse\": True}, transformation_ctx=\"AmazonS3_node1721870142674\")\n\n# Define predicate pushdown\npredicate_pushdown = \"region in ('ca','gb','us')\"  # Highlighted change\n\n# Create dynamic frame with predicate pushdown\ndatasource0 = glueContext.create_dynamic_frame.from_catalog(\n    database = \"de_yputube_raw\", \n    table_name = \"raw_statistics\", \n    transformation_ctx = \"datasource0\", \n    push_down_predicate = predicate_pushdown  # Highlighted change\n)\n# Function to add region column based on the folder structure\ndef add_region_col(dynamic_frame):\n    def extract_region(rec):\n        path = rec[\"__source_path\"]\n        # Extract the region part from the path\n        region = path.split(\"/\")[-2].split(\"=\")[1]  # Highlighted change\n        rec[\"region\"] = region\n        return rec\n\n    return Map.apply(frame=dynamic_frame, f=extract_region)\n\n#AmazonS3_node1721870142674 = add_region_col(AmazonS3_node1721870142674)\n# datasource0 = add_region_col(datasource0)\n\n\n\n# Script generated for node Change Schema\nChangeSchema_node = ApplyMapping.apply(\n    frame=datasource0,\n    mappings=[\n        (\"video_id\", \"string\", \"video_id\", \"string\"),\n        (\"trending_date\", \"string\", \"trending_date\", \"string\"),\n        (\"title\", \"string\", \"title\", \"string\"),\n        (\"channel_title\", \"string\", \"channel_title\", \"string\"),\n        (\"category_id\", \"string\", \"category_id\", \"bigint\"),\n        (\"publish_time\", \"string\", \"publish_time\", \"string\"),\n        (\"tags\", \"string\", \"tags\", \"string\"),\n        (\"views\", \"string\", \"views\", \"bigint\"),\n        (\"likes\", \"string\", \"likes\", \"bigint\"),\n        (\"dislikes\", \"string\", \"dislikes\", \"bigint\"),\n        (\"comment_count\", \"string\", \"comment_count\", \"bigint\"),\n        (\"thumbnail_link\", \"string\", \"thumbnail_link\", \"string\"),\n        (\"comments_disabled\", \"string\", \"comments_disabled\", \"boolean\"),\n        (\"ratings_disabled\", \"string\", \"ratings_disabled\", \"boolean\"),\n        (\"video_error_or_removed\", \"string\", \"video_error_or_removed\", \"boolean\"),\n        (\"description\", \"string\", \"description\", \"string\"),\n        (\"region\", \"string\", \"region\", \"string\")  # Highlighted change\n    ],\n    transformation_ctx=\"ChangeSchema_node\"\n)\n# Script generated for node Amazon S3\nAmazonS3_node1721870142674_write = glueContext.write_dynamic_frame.from_options(\n    frame=ChangeSchema_node,\n    connection_type=\"s3\",\n    format=\"glueparquet\",\n    connection_options={\"path\": \"s3://de-on-youtube-cleansed-useast1-devnikita/youtube/raw_statistics/\", \"partitionKeys\": [\"region\"]},\n    format_options={\"compression\": \"snappy\"},\n    transformation_ctx=\"AmazonS3_node1721870142674_write\"\n)\n\n\n\n\njob.commit()"
+}

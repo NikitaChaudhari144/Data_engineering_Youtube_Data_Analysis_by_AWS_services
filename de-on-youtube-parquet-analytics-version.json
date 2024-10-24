@@ -1,0 +1,144 @@
+{
+	"jobConfig": {
+		"name": "de-on-youtube-parquet-analytics-version",
+		"description": "",
+		"role": "arn:aws:iam::058264284225:role/de-on-youtube-glue-s3-role",
+		"command": "glueetl",
+		"version": "4.0",
+		"runtime": null,
+		"workerType": "G.1X",
+		"numberOfWorkers": 10,
+		"maxCapacity": 10,
+		"jobRunQueuingEnabled": null,
+		"maxRetries": 0,
+		"timeout": 2880,
+		"maxConcurrentRuns": 1,
+		"security": "none",
+		"scriptName": "de-on-youtube-parquet-analytics-version.py",
+		"scriptLocation": "s3://aws-glue-assets-058264284225-us-east-1/scripts/",
+		"language": "python-3",
+		"spark": false,
+		"sparkConfiguration": "standard",
+		"jobParameters": [],
+		"tags": [],
+		"jobMode": "DEVELOPER_MODE",
+		"createdOn": "2024-07-25T19:37:48.036Z",
+		"developerMode": true,
+		"connectionsList": [],
+		"temporaryDirectory": "s3://aws-glue-assets-058264284225-us-east-1/temporary/",
+		"logging": true,
+		"glueHiveMetastore": true,
+		"etlAutoTuning": false,
+		"metrics": true,
+		"observabilityMetrics": true,
+		"bookmark": "job-bookmark-disable",
+		"sparkPath": "s3://aws-glue-assets-058264284225-us-east-1/sparkHistoryLogs/",
+		"flexExecution": false,
+		"minFlexWorkers": null,
+		"maintenanceWindow": null
+	},
+	"dag": {
+		"node-1721936337109": {
+			"nodeId": "node-1721936337109",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [],
+			"name": "AWS Glue Data Catalog",
+			"generatedNodeName": "AWSGlueDataCatalog_node1721936337109",
+			"classification": "DataSource",
+			"type": "Catalog",
+			"isCatalog": true,
+			"database": "db_youtube_cleaned",
+			"table": "raw_statistics",
+			"calculatedType": "",
+			"runtimeParameters": [],
+			"codeGenVersion": 2
+		},
+		"node-1721936654673": {
+			"nodeId": "node-1721936654673",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1721936365439"
+			],
+			"name": "Amazon S3",
+			"generatedNodeName": "AmazonS3_node1721936654673",
+			"classification": "DataSink",
+			"type": "S3",
+			"streamingBatchInterval": 100,
+			"format": "glueparquet",
+			"compression": "snappy",
+			"path": "s3://de-on-youtube-analytics-useast1-devnikita",
+			"partitionKeys": [
+				"region",
+				"category_id"
+			],
+			"schemaChangePolicy": {
+				"enableUpdateCatalog": true,
+				"updateBehavior": "UPDATE_IN_DATABASE",
+				"database": "db_youtube_analytics",
+				"table": "final_analytics"
+			},
+			"updateCatalogOptions": "schemaAndPartitions",
+			"autoDataQuality": {
+				"isEnabled": false,
+				"evaluationContext": null
+			},
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1721936365439": {
+			"nodeId": "node-1721936365439",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1721936299764",
+				"node-1721936337109"
+			],
+			"name": "Join",
+			"generatedNodeName": "Join_node1721936365439",
+			"classification": "Transform",
+			"type": "Join",
+			"joinType": "equijoin",
+			"columns": [
+				{
+					"from": "node-1721936299764",
+					"keys": [
+						"id"
+					]
+				},
+				{
+					"from": "node-1721936337109",
+					"keys": [
+						"category_id"
+					]
+				}
+			],
+			"columnConditions": [
+				"="
+			],
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1721936299764": {
+			"nodeId": "node-1721936299764",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [],
+			"name": "AWS Glue Data Catalog",
+			"generatedNodeName": "AWSGlueDataCatalog_node1721936299764",
+			"classification": "DataSource",
+			"type": "Catalog",
+			"isCatalog": true,
+			"database": "db_youtube_cleaned",
+			"table": "cleaned_statistics_reference_data",
+			"calculatedType": "",
+			"runtimeParameters": [],
+			"codeGenVersion": 2
+		}
+	},
+	"hasBeenSaved": false,
+	"usageProfileName": null,
+	"script": "import sys\nfrom awsglue.transforms import *\nfrom awsglue.utils import getResolvedOptions\nfrom pyspark.context import SparkContext\nfrom awsglue.context import GlueContext\nfrom awsglue.job import Job\nimport logging  # Ensure logging module is imported\n\n# Initialize logger\nlogger = logging.getLogger()\nlogger.setLevel(logging.INFO)\nlogging.basicConfig(level=logging.INFO)\n\n\n\n# Get job arguments\nargs = getResolvedOptions(sys.argv, ['JOB_NAME'])\nsc = SparkContext()\nglueContext = GlueContext(sc)\nspark = glueContext.spark_session\njob = Job(glueContext)\njob.init(args['JOB_NAME'], args)\n\n\n\nlogger.info(\"Reading from AWS Glue Data Catalog\")\nAWSGlueDataCatalog_node1721936337109 = glueContext.create_dynamic_frame.from_catalog(database=\"db_youtube_cleaned\", table_name=\"raw_statistics\", transformation_ctx=\"AWSGlueDataCatalog_node1721936337109\")\nAWSGlueDataCatalog_node1721936299764 = glueContext.create_dynamic_frame.from_catalog(database=\"db_youtube_cleaned\", table_name=\"cleaned_statistics_reference_data\", transformation_ctx=\"AWSGlueDataCatalog_node1721936299764\")\n\nlogger.info(\"Raw statistics schema: \" + str(AWSGlueDataCatalog_node1721936337109.schema()))\nlogger.info(\"Cleaned statistics reference data schema: \" + str(AWSGlueDataCatalog_node1721936299764.schema()))\n\nAWSGlueDataCatalog_node1721936337109.show(5)\nAWSGlueDataCatalog_node1721936299764.show(5)\n\nlogger.info(\"Performing join operation\")\nJoin_node1721936365439 = Join.apply(frame1=AWSGlueDataCatalog_node1721936299764, frame2=AWSGlueDataCatalog_node1721936337109, keys1=[\"id\"], keys2=[\"category_id\"], transformation_ctx=\"Join_node1721936365439\")\n\nlogger.info(\"Join schema: \" + str(Join_node1721936365439.schema()))\nJoin_node1721936365439.show(5)\n\nlogger.info(\"Writing to Amazon S3\")\nAmazonS3_node1721936654673 = glueContext.getSink(path=\"s3://de-on-youtube-analytics-useast1-devnikita\", connection_type=\"s3\", updateBehavior=\"UPDATE_IN_DATABASE\", partitionKeys=[\"region\", \"category_id\"], enableUpdateCatalog=True, transformation_ctx=\"AmazonS3_node1721936654673\")\nAmazonS3_node1721936654673.setCatalogInfo(catalogDatabase=\"db_youtube_analytics\", catalogTableName=\"final_analytics\")\nAmazonS3_node1721936654673.setFormat(\"glueparquet\", compression=\"snappy\")\nAmazonS3_node1721936654673.writeFrame(Join_node1721936365439)\n\nlogger.info(\"Job committed\")\n\n\n\n\n\n\n\n\n# Script generated for node AWS Glue Data Catalog\n#AWSGlueDataCatalog_node1721936337109 = glueContext.create_dynamic_frame.from_catalog(database=\"db_youtube_cleaned\", table_name=\"raw_statistics\", transformation_ctx=\"AWSGlueDataCatalog_node1721936337109\")\n\n# Script generated for node AWS Glue Data Catalog\n#AWSGlueDataCatalog_node1721936299764 = glueContext.create_dynamic_frame.from_catalog(database=\"db_youtube_cleaned\", table_name=\"cleaned_statistics_reference_data\", transformation_ctx=\"AWSGlueDataCatalog_node1721936299764\")\n\n# Script generated for node Join\n#Join_node1721936365439 = Join.apply(frame1=AWSGlueDataCatalog_node1721936299764, frame2=AWSGlueDataCatalog_node1721936337109, keys1=[\"id\"], keys2=[\"category_id\"], transformation_ctx=\"Join_node1721936365439\")\n\n# Script generated for node Amazon S3\n#AmazonS3_node1721936654673 = glueContext.getSink(path=\"s3://de-on-youtube-analytics-useast1-devnikita\", connection_type=\"s3\", updateBehavior=\"UPDATE_IN_DATABASE\", partitionKeys=[\"region\", \"category_id\"], enableUpdateCatalog=True, transformation_ctx=\"AmazonS3_node1721936654673\")\n#AmazonS3_node1721936654673.setCatalogInfo(catalogDatabase=\"db_youtube_analytics\",catalogTableName=\"final_analytics\")\n#AmazonS3_node1721936654673.setFormat(\"glueparquet\", compression=\"snappy\")\n#AmazonS3_node1721936654673.writeFrame(Join_node1721936365439)\njob.commit()"
+}
